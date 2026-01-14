@@ -1,5 +1,6 @@
 import './App.css'
-import Dashboard from './components/Dashboard'
+import CreateTask from './components/CreateTask'
+// import Dashboard from './components/Dashboard'
 // import TaskManager from './components/TaskManager'
 
 function App() {
@@ -7,7 +8,8 @@ function App() {
   return (
     <>
     {/* <TaskManager /> */}
-    <Dashboard />
+    {/* <Dashboard /> */}
+    <CreateTask />
 
     </>
   )
