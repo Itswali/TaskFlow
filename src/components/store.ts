@@ -13,8 +13,6 @@ export type Task = {
 interface TasksState {
   tasks: Task[];
   addTask: (task: Task) => void;
-  // toggleComplete: (id: number) => void;
-  // removeTask: (id: number) => void;
 }
 
 export const useTasksStore = create<TasksState>((set) => ({

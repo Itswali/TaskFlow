@@ -1,38 +1,10 @@
-import React from 'react'
+import { useTasksStore } from './store'
 
-const demoTasks: Task[] = [
- {
-   id: '1',
-   title: 'Initialize Repository',
-   description: 'Set up Vite, Tailwind, and Shadcn UI components.',
-   priority: 'High',
-   deadline: new Date().toISOString(),
-   isCompleted: true,
-   createdAt: Date.now(),
- },
- {
-   id: '2',
-   title: 'Configure Zustand Store',
-   description: 'Create the global store with localStorage persistence logic.',
-   priority: 'Medium',
-   deadline: '2024-06-20',
-   isCompleted: false,
-   createdAt: Date.now() + 1,
- },
- {
-   id: '3',
-   title: 'Design Dashboard Stats',
-   description: 'Use useMemo to calculate completion percentage from the task list.',
-   priority: 'Low',
-   deadline: '2024-06-25',
-   isCompleted: false,
-   createdAt: Date.now() + 2,
- }
-];
 export default function TaskManager() {
+  const tasks = useTasksStore((state) => state.tasks)
   return (
-<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {demoTasks.map((task) => (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {tasks.map((task) => (
       <div
               key={task.id}
               className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm hover:shadow-md transition-shadow"
@@ -52,7 +24,7 @@ export default function TaskManager() {
               </p>
 
               <div className="flex items-center justify-between mt-auto pt-4 border-t border-slate-100">
-                <span className="text-xs text-slate-400">Due: {task.deadline}</span>
+                <span className="text-xs text-slate-400">Due: {task.deadline.toLocaleDateString()}</span>
                 <span className={`text-xs font-medium ${task.isCompleted ? 'text-emerald-500' : 'text-slate-400'}`}>
                   {task.isCompleted ? '✓ Completed' : '○ Pending'}
                 </span>

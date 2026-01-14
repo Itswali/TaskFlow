@@ -3,7 +3,6 @@ import { useTasksStore, type Task } from './store'
 
 export default function CreateTask() {
 const addTask = useTasksStore((state) => state.addTask);
-const Card = useTasksStore((state) => state.tasks)
 
 const [data, setData] = useState({
   title: "",
@@ -31,66 +30,84 @@ const handleFormSubmit = (e: React.FormEvent) => {
     setData({ title: "", description: "", priority: 'Low', deadline: "" });
 }
 return (
-  <div style={{ padding: '20px' }}>
-      <form onSubmit={handleFormSubmit}>
-        <label htmlFor="title">Title: <input className="ring-2 ring-amber-700" type="text" value={data.title} onChange={(e) => setData({...data, title: e.target.value})} /></label>
-        <label htmlFor="description">Description: <input type="text" value={data.description} className="ring-2 ring-amber-700" onChange={(e) => setData({...data, description: e.target.value})} /></label>
-        <label htmlFor="priority">
-  Select Priority:
-  <select
-    name="priority"
-    id="priority"
-    value={data.priority} // Keeps the UI in sync with state
-    onChange={(e) => setData({...data, priority: e.target.value as 'Low' | 'Medium' | 'High'})}
-  >
-    <option value="" disabled>Select One.</option>
-    <option value="Low">Low</option>
-    <option value="Medium">Medium</option>
-    <option value="High">High</option>
-  </select>
-</label>
-<label htmlFor="deadline">
-  Deadline:
-  <input
-    type="date"
-    className="ring-2 ring-amber-700 ml-2"
-    value={data.deadline}
-    onChange={(e) => setData({...data, deadline: e.target.value})}
-  />
-</label>
-<button type="submit">Add Task</button>
-      </form>
+ <div className="max-w-2xl mx-auto p-8">
+  <div className="bg-white shadow-xl rounded-2xl p-8 border border-slate-100">
+    <h2 className="text-2xl font-bold text-slate-800 mb-6">Create New Task</h2>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {Card.map((task) => (
-      <div
-              key={task.id}
-              className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm hover:shadow-md transition-shadow"
-            >
-              <div className="flex justify-between items-start mb-3">
-                <h3 className="font-semibold text-lg text-slate-900">{task.title}</h3>
-                <span className={`text-[10px] uppercase font-bold px-2 py-1 rounded ${
-                  task.priority === 'High' ? 'bg-red-100 text-red-600' :
-                  task.priority === 'Medium' ? 'bg-amber-100 text-amber-600' : 'bg-emerald-100 text-emerald-600'
-                }`}>
-                  {task.priority}
-                </span>
-              </div>
+    <form onSubmit={handleFormSubmit} className="flex flex-col gap-6">
+      {/* Title Input */}
+      <div className="flex flex-col gap-2">
+        <label htmlFor="title" className="text-sm font-semibold text-slate-700">
+          Task Title
+        </label>
+        <input
+          id="title"
+          type="text"
+          placeholder="What needs to be done?"
+          className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none transition-all"
+          value={data.title}
+          onChange={(e) => setData({ ...data, title: e.target.value })}
+        />
+      </div>
 
-              <p className="text-slate-600 text-sm mb-4 line-clamp-2">
-                {task.description}
-              </p>
+      {/* Description Input */}
+      <div className="flex flex-col gap-2">
+        <label htmlFor="description" className="text-sm font-semibold text-slate-700">
+          Description
+        </label>
+        <textarea
+          id="description"
+          rows={3}
+          placeholder="Add some details..."
+          className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none transition-all resize-none"
+          value={data.description}
+          onChange={(e) => setData({ ...data, description: e.target.value })}
+        />
+      </div>
 
-              <div className="flex items-center justify-between mt-auto pt-4 border-t border-slate-100">
-                <span className="text-xs text-slate-400">Due: {task.deadline.toLocaleDateString()}</span>
-                <span className={`text-xs font-medium ${task.isCompleted ? 'text-emerald-500' : 'text-slate-400'}`}>
-                  {task.isCompleted ? '✓ Completed' : '○ Pending'}
-                </span>
-              </div>
-            </div>
-      ))}
-    </div>
-    </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Priority Select */}
+        <div className="flex flex-col gap-2">
+          <label htmlFor="priority" className="text-sm font-semibold text-slate-700">
+            Priority Level
+          </label>
+          <select
+            id="priority"
+            className="w-full px-4 py-2 rounded-lg border border-slate-300 bg-white focus:ring-2 focus:ring-amber-500 outline-none transition-all"
+            value={data.priority}
+            onChange={(e) => setData({ ...data, priority: e.target.value as 'Low' | 'Medium' | 'High' })}
+          >
+            <option value="Low">Low</option>
+            <option value="Medium">Medium</option>
+            <option value="High">High</option>
+          </select>
+        </div>
+
+        {/* Deadline Input */}
+        <div className="flex flex-col gap-2">
+          <label htmlFor="deadline" className="text-sm font-semibold text-slate-700">
+            Deadline
+          </label>
+          <input
+            id="deadline"
+            type="date"
+            className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-amber-500 outline-none transition-all"
+            value={data.deadline}
+            onChange={(e) => setData({ ...data, deadline: e.target.value })}
+          />
+        </div>
+      </div>
+
+      {/* Submit Button */}
+      <button
+        type="submit"
+        className="mt-4 w-full bg-amber-600 hover:bg-amber-700 text-white font-bold py-3 px-6 rounded-lg shadow-lg hover:shadow-amber-200/50 transition-all transform active:scale-[0.98]"
+      >
+        Add Task to List
+      </button>
+    </form>
+  </div>
+</div>
   )
 
 };
