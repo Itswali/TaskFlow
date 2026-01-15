@@ -13,12 +13,22 @@ export type Task = {
 interface TasksState {
   tasks: Task[];
   addTask: (task: Task) => void;
+  findTask: (id: number) => Task | undefined;
+  toggleTask: (id: number) => void;
 }
 
-export const useTasksStore = create<TasksState>((set) => ({
+export const useTasksStore = create<TasksState>((set, get) => ({
   tasks: [],
   addTask: (newTask) =>
     set((state) => ({
       tasks: [...state.tasks, newTask]
     })),
+    findTask: (id: number) => {
+      return get().tasks.find((task) => task.id === id);
+    },
+    toggleTask: (id: number) => set((state) => ({
+    tasks: state.tasks.map((t) =>
+      t.id === id ? { ...t, isCompleted: true } : t
+    )
+  }))
 }))

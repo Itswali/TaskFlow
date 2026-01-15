@@ -1,8 +1,17 @@
-import { useTasksStore } from './store'
-import { CheckCircle, Trash2, Clock, AlertCircle } from 'lucide-react' // Optional: Install lucide-react for icons
+import { useTasksStore } from "./store";
+import { CheckCircle, Trash2, Clock, AlertCircle } from "lucide-react"; // Optional: Install lucide-react for icons
+import TaskDetails from "./TaskDetails";
+import { useNavigate } from "react-router-dom";
 
 export default function TaskManager() {
-  const tasks = useTasksStore((state) => state.tasks)
+  const tasks = useTasksStore((state) => state.tasks);
+  const toggleTask = useTasksStore((state) => state.toggleTask);
+  const navigate = useNavigate(); // 2. Initialize navigate
+
+  const handleComplete = (id: number) => {
+    toggleTask(id); // Update the state
+    navigate(`/tasks/${id}`); // 3. Redirect to details page
+  };
 
   if (tasks.length === 0) {
     return (
@@ -13,7 +22,7 @@ export default function TaskManager() {
         <p className="text-xl font-medium">No tasks found</p>
         <p className="text-sm">Click "Create Task" to get started!</p>
       </div>
-    )
+    );
   }
 
   return (
@@ -30,30 +39,45 @@ export default function TaskManager() {
           <div
             key={task.id}
             className={`group relative bg-white border rounded-2xl p-6 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 ${
-              task.isCompleted ? 'border-emerald-100 bg-emerald-50/20' : 'border-slate-200 shadow-sm'
+              task.isCompleted
+                ? "border-emerald-100 bg-emerald-50/20"
+                : "border-slate-200 shadow-sm"
             }`}
           >
+            <button type="submit">
+              Details <TaskDetails taskId={task.id} />{" "}
+            </button>
             {/* Priority Badge */}
             <div className="flex justify-between items-start mb-4">
-              <span className={`text-[10px] uppercase tracking-wider font-black px-2.5 py-1 rounded-md shadow-sm ${
-                task.priority === 'High' ? 'bg-red-500 text-white' :
-                task.priority === 'Medium' ? 'bg-amber-400 text-amber-950' :
-                'bg-emerald-400 text-emerald-950'
-              }`}>
+              <span
+                className={`text-[10px] uppercase tracking-wider font-black px-2.5 py-1 rounded-md shadow-sm ${
+                  task.priority === "High"
+                    ? "bg-red-500 text-white"
+                    : task.priority === "Medium"
+                    ? "bg-amber-400 text-amber-950"
+                    : "bg-emerald-400 text-emerald-950"
+                }`}
+              >
                 {task.priority}
               </span>
 
               <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                 {/* Delete Button placeholder */}
-                 <button className="p-1.5 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors">
-                    <Trash2 size={18} />
-                 </button>
+                {/* Delete Button placeholder */}
+                <button className="p-1.5 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors">
+                  <Trash2 size={18} />
+                </button>
               </div>
             </div>
 
             {/* Content */}
             <div className="mb-6">
-              <h3 className={`font-bold text-lg mb-2 leading-tight ${task.isCompleted ? 'text-slate-400 line-through' : 'text-slate-800'}`}>
+              <h3
+                className={`font-bold text-lg mb-2 leading-tight ${
+                  task.isCompleted
+                    ? "text-slate-400 line-through"
+                    : "text-slate-800"
+                }`}
+              >
                 {task.title}
               </h3>
               <p className="text-slate-500 text-sm leading-relaxed line-clamp-3">
@@ -66,24 +90,24 @@ export default function TaskManager() {
               <div className="flex items-center gap-1.5 text-slate-400">
                 <Clock size={14} />
                 <span className="text-xs font-medium">
-                   {new Date(task.deadline).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+                  {new Date(task.deadline).toLocaleDateString(undefined, {
+                    month: "short",
+                    day: "numeric",
+                  })}
                 </span>
               </div>
 
               <button
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
-                  task.isCompleted
-                    ? 'bg-emerald-100 text-emerald-600'
-                    : 'bg-slate-100 text-slate-600 hover:bg-emerald-500 hover:text-white'
-                }`}
+                onClick={() => handleComplete(task.id)} // 4. Attach handler
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold ...`}
               >
                 <CheckCircle size={14} />
-                {task.isCompleted ? 'Done' : 'Complete'}
+                {task.isCompleted ? "Done" : "Complete"}
               </button>
             </div>
           </div>
         ))}
       </div>
     </div>
-  )
+  );
 }
