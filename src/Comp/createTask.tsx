@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 
 
 import { useTaskStore } from "@/store";
+import Timer from "./Timer";
 
 export default function CreateTask() {
   const { tasks, addTask, deleteTask, toggleTask, clearCompleted, editTask } = useTaskStore();
@@ -28,7 +29,7 @@ export default function CreateTask() {
 
   return (
     <div className="max-w-2xl mx-auto mt-10 p-6 bg-white rounded-xl shadow-lg">
-      {/* <Timer /> */}
+      <Timer />
       <h1 className="text-2xl font-bold mb-6">Task Manager</h1>
       <form onSubmit={handleSubmit} className="space-y-4 mb-10">
         <div className="flex flex-col">
