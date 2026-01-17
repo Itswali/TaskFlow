@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 
 
-export default function ViewTask({ tasks, onToggle, onDelete, onEdit }) {
+export default function ViewTask({ tasks, onToggle, onDelete, onEdit, onClear }) {
   const [query, setQuery] = useState('');
   const [editId, setEditId] = useState(null);
   const [editText, setEditText] = useState("");
@@ -40,7 +40,7 @@ return (
       </div>
 
       <h2 className="text-xl font-bold border-b pb-2">Task List</h2>
-
+       <button className="bg-red-100 text-red-600 px-3 py-1 rounded hover:bg-red-200" onClick={onClear}>Clear All Completed Tasks</button>
       {/* Logic to show the list */}
       {filteredTasks.length > 0 ? (
         filteredTasks.map((task) => (

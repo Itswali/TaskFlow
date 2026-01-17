@@ -6,7 +6,7 @@ import Timer from "./Timer";
 export default function CreateTask() {
   const [title, setTitle] = useState("");
   const [desc, setDesc] = useState("");
-  const [category, setCategory] = useState("");
+  const [category, setCategory] = useState("home");
   const [data, setData] = useState(() => {
     const savedTasks = localStorage.getItem("my-tasks");
     return savedTasks ? JSON.parse(savedTasks): [];
@@ -49,6 +49,10 @@ const deleteTask = (id) => {
   setData(data.filter(task => task.id !== id));
 };
 
+const clearTask = () => {
+  setData(data.filter(t => !t.completed))
+}
+
 const editTask = (id, newData) => {
   setData(data.map(task =>
     task.id === id ? {...task, ...newData} : task
@@ -58,7 +62,7 @@ const editTask = (id, newData) => {
 
   return (
     <div className="max-w-2xl mx-auto mt-10 p-6 bg-white rounded-xl shadow-lg">
-      <Timer />
+      {/* <Timer /> */}
       <h1 className="text-2xl font-bold mb-6">Task Manager</h1>
       <form onSubmit={handleSubmit} className="space-y-4 mb-10">
         <div className="flex flex-col">
@@ -76,7 +80,7 @@ const editTask = (id, newData) => {
 
         <div className="flex flex-col">
           <label htmlFor="description" className="font-semibold">Description:</label>
-          <input
+          <input required
             id="description"
             type="text"
             value={desc}
@@ -90,6 +94,7 @@ const editTask = (id, newData) => {
           <select
             className="ring-sky-400 ring-2 rounded-md p-2"
             value={category}
+            required
             onChange={(e) => setCategory(e.target.value)}
           >
             <option value="home">Home</option>
@@ -108,7 +113,7 @@ const editTask = (id, newData) => {
 
       <hr className="my-8" />
 
-      <ViewTask tasks={data} onToggle={toggleComplete} onDelete={deleteTask} onEdit={editTask}/>
+      <ViewTask tasks={data} onToggle={toggleComplete} onDelete={deleteTask} onEdit={editTask} onClear={clearTask}/>
     </div>
   );
 }
