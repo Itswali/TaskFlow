@@ -1,8 +1,11 @@
+import { useTaskStore } from '@/store';
 import React, { useState } from 'react'
 
 
-export default function ViewTask({ tasks, onToggle, onDelete, onEdit, onClear }) {
+export default function ViewTask() {
+const { tasks, deleteTask, toggleTask, clearCompleted, editTask } = useTaskStore();
   const [query, setQuery] = useState('');
+
   const [editId, setEditId] = useState(null);
   const [editText, setEditText] = useState("");
 
@@ -15,7 +18,7 @@ export default function ViewTask({ tasks, onToggle, onDelete, onEdit, onClear })
 
 
   const handleSave = (id) => {
-    onEdit(id, { title: editText });
+    editTask(id, { title: editText });
     setEditId(null); // Close the edit mode
   };
 
@@ -40,7 +43,7 @@ return (
       </div>
 
       <h2 className="text-xl font-bold border-b pb-2">Task List</h2>
-       <button className="bg-red-100 text-red-600 px-3 py-1 rounded hover:bg-red-200" onClick={onClear}>Clear All Completed Tasks</button>
+       <button className="bg-red-100 text-red-600 px-3 py-1 rounded hover:bg-red-200" onClick={clearCompleted}>Clear All Completed Tasks</button>
       {/* Logic to show the list */}
       {filteredTasks.length > 0 ? (
         filteredTasks.map((task) => (
@@ -49,7 +52,7 @@ return (
               <input
                 type="checkbox"
                 checked={task.completed}
-                onChange={() => onToggle(task.id)}
+                onChange={() => toggleTask(task.id)}
               />
 
               {/* CONDITIONAL RENDERING: Show Input if editing, else show Title */}
@@ -97,7 +100,7 @@ return (
               )}
 
               <button
-                onClick={() => onDelete(task.id)}
+                onClick={() => deleteTask(task.id)}
                 className="bg-red-100 text-red-600 px-3 py-1 rounded hover:bg-red-200"
               >
                 Delete

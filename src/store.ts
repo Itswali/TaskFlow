@@ -1,26 +1,29 @@
-import { create } from "zustand";
+import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
+import { nanoid } from 'nanoid';
 
-export type Task = {
-  id: number;
-  title: string;
-  description: string;
-  priority: 'Low' | 'Medium' | 'High';
-  deadline: Date;
-  isCompleted: boolean;
-  createdAt: Date;
-};
-
-interface TasksState {
-  tasks: Task[];
-  addTask: (task: Task) => void;
-  // toggleComplete: (id: number) => void;
-  // removeTask: (id: number) => void;
-}
-
-export const useTasksStore = create<TasksState>((set) => ({
-  tasks: [],
-  addTask: (newTask) =>
-    set((state) => ({
-      tasks: [...state.tasks, newTask]
+export const useTaskStore = create(
+  persist((set) => ({
+    tasks: [],
+    addTask: (title, desc, category) => set((state) =>({
+      tasks: [...state.tasks, {id: nanoid(), title, desc, category, completed: false}]
     })),
-}))
+
+    toggleTask: (id) => set((state) => ({
+      tasks: state.tasks.map((t) => t.id === id ? {...t, completed: !t.completed} : t
+    )
+    })),
+deleteTask: (id) => set((state) => ({
+        tasks: state.tasks.filter((t) => t.id !== id)
+      })),
+
+      clearCompleted: () => set((state) => ({
+        tasks: state.tasks.filter((t) => !t.completed)
+      })),
+      editTask: (id, newData) => set((state) => ({
+      tasks: state.tasks.map((t) => t.id === id ? { ...t, ...newData } : t)
+    })),
+    }),
+    { name: 'task-storage' }
+  )
+);

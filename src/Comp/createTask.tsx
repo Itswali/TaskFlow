@@ -1,19 +1,14 @@
-import { nanoid } from "nanoid";
-import React, { useEffect, useRef, useState } from "react";
-import ViewTask from "./viewTask";
-import Timer from "./Timer";
+import { useEffect, useRef, useState } from "react";
+
+
+import { useTaskStore } from "@/store";
 
 export default function CreateTask() {
+  const { tasks, addTask, deleteTask, toggleTask, clearCompleted, editTask } = useTaskStore();
   const [title, setTitle] = useState("");
   const [desc, setDesc] = useState("");
   const [category, setCategory] = useState("home");
-  const [data, setData] = useState(() => {
-    const savedTasks = localStorage.getItem("my-tasks");
-    return savedTasks ? JSON.parse(savedTasks): [];
-  });
-  useEffect(() => {
-    localStorage.setItem("my-tasks", JSON.stringify(data));
-  }, [data]);
+
 
   const initialInputRef = useRef(null);
   useEffect(() => {
@@ -24,40 +19,11 @@ export default function CreateTask() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const newTask = {
-      id: nanoid(),
-      title: title,
-      desc: desc,
-      category: category,
-      completed: false,
-    };
-    setData([...data, newTask]);
+    addTask(title, desc, category)
     setTitle("");
     setDesc("");
     setCategory("home");
   };
-const toggleComplete = (id) => {
-  setData(data.map(task => {
-    if (task.id === id) {
-      return { ...task, completed: !task.completed };
-    }
-    return task;
-  }));
-};
-
-const deleteTask = (id) => {
-  setData(data.filter(task => task.id !== id));
-};
-
-const clearTask = () => {
-  setData(data.filter(t => !t.completed))
-}
-
-const editTask = (id, newData) => {
-  setData(data.map(task =>
-    task.id === id ? {...task, ...newData} : task
-  ));
-}
 
 
   return (
@@ -110,10 +76,7 @@ const editTask = (id, newData) => {
           Add Task
         </button>
       </form>
-
       <hr className="my-8" />
-
-      <ViewTask tasks={data} onToggle={toggleComplete} onDelete={deleteTask} onEdit={editTask} onClear={clearTask}/>
     </div>
   );
 }
