@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 
+
 export default function ViewTask({ tasks, onToggle, onDelete, onEdit }) {
   const [query, setQuery] = useState('');
   const [editId, setEditId] = useState(null);
@@ -54,11 +55,15 @@ return (
               {/* CONDITIONAL RENDERING: Show Input if editing, else show Title */}
               {editId === task.id ? (
                 <input
-                  className="ring-2 ring-orange-400 p-1 rounded"
-                  value={editText}
-                  onChange={(e) => setEditText(e.target.value)}
-                  autoFocus
-                />
+  className="ring-2 ring-orange-400 p-1 rounded"
+  value={editText}
+  onChange={(e) => setEditText(e.target.value)}
+  onKeyDown={(e) => {
+    if (e.key === 'Enter') handleSave(task.id);
+    if (e.key === 'Escape') setEditId(null); // Bonus: Cancel on Escape
+  }}
+  autoFocus
+/>
               ) : (
                 <div>
                   <h3 className={`text-lg font-bold ${task.completed ? 'line-through text-gray-400' : 'text-indigo-700'}`}>
@@ -66,12 +71,15 @@ return (
                   </h3>
                   <p className="text-sm text-gray-600">{task.desc}</p>
                   <span className="text-xs bg-indigo-100 px-2 py-1 rounded">{task.category}</span>
+                  <span className="text-sm font-medium">
+              {task.completed ? "✅ Completed" : "⏳ Pending"}
+            </span>
                 </div>
               )}
             </div>
 
             <div className="flex gap-2">
-              {/* Show Save button if editing, else show Edit button */}
+
               {editId === task.id ? (
                 <button
                   onClick={() => handleSave(task.id)}
@@ -100,6 +108,7 @@ return (
       ) : (
         <h1 className="text-red-500 mt-4">No tasks found!</h1>
       )}
+
     </div>
   )
 }

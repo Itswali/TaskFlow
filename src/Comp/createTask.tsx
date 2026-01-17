@@ -1,12 +1,19 @@
 import { nanoid } from "nanoid";
 import React, { useEffect, useRef, useState } from "react";
 import ViewTask from "./viewTask";
+import Timer from "./Timer";
 
 export default function CreateTask() {
   const [title, setTitle] = useState("");
   const [desc, setDesc] = useState("");
-  const [category, setCategory] = useState("home");
-  const [data, setData] = useState([]);
+  const [category, setCategory] = useState("");
+  const [data, setData] = useState(() => {
+    const savedTasks = localStorage.getItem("my-tasks");
+    return savedTasks ? JSON.parse(savedTasks): [];
+  });
+  useEffect(() => {
+    localStorage.setItem("my-tasks", JSON.stringify(data));
+  }, [data]);
 
   const initialInputRef = useRef(null);
   useEffect(() => {
@@ -51,6 +58,7 @@ const editTask = (id, newData) => {
 
   return (
     <div className="max-w-2xl mx-auto mt-10 p-6 bg-white rounded-xl shadow-lg">
+      <Timer />
       <h1 className="text-2xl font-bold mb-6">Task Manager</h1>
       <form onSubmit={handleSubmit} className="space-y-4 mb-10">
         <div className="flex flex-col">
